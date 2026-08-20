@@ -1,8 +1,9 @@
 using System.Reflection;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Azure.Storage.Blobs;
-using EPR.Calculator.API.BackgroundService.Logging;
 using EPR.Calculator.API.BackgroundService.Services;
 using EPR.Calculator.API.BackgroundService.Telemetry;
+using EPR.Calculator.API.BackgroundService.Telemetry.Helpers;
 using EPR.Calculator.API.Data;
 using EPR.Calculator.API.Extensions;
 using EPR.Calculator.API.Filters;
@@ -25,26 +26,17 @@ public static class ServiceConfiguration
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddPayCalTelemetry(IConfiguration configuration, IHostEnvironment environment)
+        public IServiceCollection AddPayCalTelemetry(IHostEnvironment environment)
         {
-            if (environment.IsLocal() && IsAppInsightsDisabled())
-                services.AddSingleton<ITelemetryClient, LoggerTelemetryClient>();
-            else
-            {
-                services.AddApplicationInsightsTelemetry();
-                services.AddSingleton<ITelemetryClient, AppInsightsTelemetryClient>();
-            }
+            services.AddOpenTelemetry()
+                .WithTracing(tracing => tracing.AddSource(Telemetry.Name))
+                .WithMetrics(metrics => metrics.AddMeter(Telemetry.Name))
+                .UseAzureMonitor();
+
+            if (environment.IsLocal())
+                services.AddHostedService<TelemetryLoggingHost>();
 
             return services;
-
-            bool IsAppInsightsDisabled()
-            {
-                var connectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")
-                                       ?? configuration["ApplicationInsights:ConnectionString"];
-
-                return string.IsNullOrWhiteSpace(connectionString)
-                       || connectionString.Contains($"InstrumentationKey={Guid.Empty}", StringComparison.OrdinalIgnoreCase);
-            }
         }
 
         public IServiceCollection AddPayCalProblemDetails(IHostEnvironment environment)

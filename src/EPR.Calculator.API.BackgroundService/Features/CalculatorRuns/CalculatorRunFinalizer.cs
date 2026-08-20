@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using EPR.Calculator.API.Data;
-using EPR.Calculator.API.Data.DataModels;
 using EPR.Calculator.API.BackgroundService.Enums;
 using EPR.Calculator.API.BackgroundService.Exceptions;
 using EPR.Calculator.API.BackgroundService.Features.CalculatorRuns.Contexts;
 using EPR.Calculator.API.BackgroundService.Features.CalculatorRuns.Outputs;
 using EPR.Calculator.API.BackgroundService.Models;
 using EPR.Calculator.API.BackgroundService.Services;
+using EPR.Calculator.API.Data;
+using EPR.Calculator.API.Data.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace EPR.Calculator.API.BackgroundService.Features.CalculatorRuns;
@@ -39,8 +39,8 @@ public class CalculatorRunFinalizer(
 
         try
         {
-            await billingInstructionService.CreateBillingInstructions(runContext, calcResult);
-            await producerInvoiceNetTonnageService.CreateProducerInvoiceNetTonnage(runContext, calcResult);
+            await billingInstructionService.CreateBillingInstructions(runContext, calcResult, cancellationToken);
+            await producerInvoiceNetTonnageService.CreateProducerInvoiceNetTonnage(runContext, calcResult, cancellationToken);
             await SaveExportMetadata(exportResult, cancellationToken);
             await SaveCompletedRunStatus(runContext, cancellationToken);
 

@@ -19,15 +19,21 @@
     "MinimumLevel": {
       "Default": "Warning",
       "Override": {
-        "EPR.Calculator": "Debug",
-        "EPR.Calculator.API.BackgroundService": "Debug",
-        "Microsoft.AspNetCore.Authentication": "Warning",
-        "Microsoft.AspNetCore.Hosting.Diagnostics": "Information",
+        "EPR.Calculator": "Verbose",
+        "EPR.Calculator.Metrics": "Information", // Only effective when TelemetryLoggingHost is enabled.
+        "EPR.Calculator.API.BackgroundService": "Verbose",
+        "Microsoft.AspNetCore.Authentication": "Information",
         "Microsoft.EntityFrameworkCore": "Warning",
         "Microsoft.Hosting.Lifetime": "Information",
-        "Microsoft.IdentityModel": "Warning"
+        "Serilog.AspNetCore": "Information"
       }
     }
+  },
+
+  // Azure OpenTelemetry connection string - must be set to a valid GUID, though using an
+  // empty one effectively disables it.
+  "AzureMonitor": {
+    "ConnectionString": "InstrumentationKey=00000000-0000-0000-0000-000000000000"
   },
 
   "AzureAd": {

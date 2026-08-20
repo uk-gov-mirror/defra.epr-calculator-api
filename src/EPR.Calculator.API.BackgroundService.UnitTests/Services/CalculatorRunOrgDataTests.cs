@@ -1,11 +1,10 @@
+using EPR.Calculator.API.BackgroundService.Services;
+using EPR.Calculator.API.BackgroundService.UnitTests.TestHelpers.TestData;
 using EPR.Calculator.API.Data;
 using EPR.Calculator.API.Data.DataModels;
 using EPR.Calculator.API.Data.DataTypes;
-using EPR.Calculator.API.BackgroundService.Services;
-using EPR.Calculator.API.BackgroundService.UnitTests.TestHelpers.TestData;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EPR.Calculator.API.BackgroundService.UnitTests.Services
 {
@@ -69,7 +68,7 @@ namespace EPR.Calculator.API.BackgroundService.UnitTests.Services
             var runContext1 = TestDataHelper.CalculatorRun2024;
             var runContext2 = runContext1 with { RunId = runContext1.RunId + 1 };
             var cancellationToken = CancellationToken.None;
-            var service = new CalculatorRunOrgData(context, new Mock<ILogger<CalculatorRunOrgData>>().Object);
+            var service = new CalculatorRunOrgData(context);
             var (classification, orgData) = await SeedData();
 
             //Run 1
