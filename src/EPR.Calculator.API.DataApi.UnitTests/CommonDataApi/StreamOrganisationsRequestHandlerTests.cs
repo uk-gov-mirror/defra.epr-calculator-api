@@ -40,7 +40,8 @@ public class StreamOrganisationsRequestHandlerTests
             organisationName = "Org Co",
             subsidiaryId = "S1",
             statusCode = "02",
-            regulatorStatus = "Granted"
+            regulatorStatus = "Granted",
+            submissionPeriodYear = 2025
         });
         var handler = CreateHandler(new MockHandler(_ => OkNdJson(ndJson)));
 
